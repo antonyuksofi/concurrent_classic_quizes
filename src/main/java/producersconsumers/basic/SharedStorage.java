@@ -2,17 +2,18 @@ package producersconsumers.basic;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class SharedStorage {
     private final Integer maxStorageSize;
     private final Deque<String> deque;
 
-    private Boolean finishedFilling;
+    private final AtomicBoolean finishedFilling;
 
     SharedStorage(Integer maxStorageSize) {
         this.maxStorageSize = maxStorageSize;
         this.deque = new ArrayDeque<>(maxStorageSize);
-        this.finishedFilling = false;
+        this.finishedFilling = new AtomicBoolean(false);
     }
 
     synchronized String get() {
@@ -20,10 +21,10 @@ public class SharedStorage {
     }
 
     synchronized void put(String message) {
-        deque.push(message);
-        if (deque.size() > maxStorageSize) {
-            throw new IllegalStateException("More messages were written than the expected storage size");
+        if (deque.size() + 1 > maxStorageSize) {
+            throw new IllegalStateException("Intended to write more messages than the expected storage size");
         }
+        deque.push(message);
     }
 
     Integer getStorageSize() {
@@ -39,10 +40,10 @@ public class SharedStorage {
     }
 
     void setFinishedFilling() {
-        this.finishedFilling = true;
+        this.finishedFilling.set(true);
     }
 
     Boolean isFinishedFilling() {
-        return finishedFilling;
+        return finishedFilling.get();
     }
 }

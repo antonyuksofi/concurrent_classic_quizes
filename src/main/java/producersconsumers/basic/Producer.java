@@ -2,11 +2,13 @@ package producersconsumers.basic;
 
 public class Producer implements Runnable {
 
-    int id;
-    SharedStorage sharedStorage;
-    int messagesCount;
-    int workDurationMin;
-    int workDurationMax;
+    private int id;
+    // though it is used in synchronized and is not final,
+    // it is effectively immutable as it is private and there are no setters
+    private SharedStorage sharedStorage;
+    private int messagesCount;
+    private int workDurationMin;
+    private int workDurationMax;
 
     @Override
     public void run() {
@@ -47,55 +49,35 @@ public class Producer implements Runnable {
         return (int) (Math.random() * (max - min) + min);
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setSharedStorage(SharedStorage sharedStorage) {
-        this.sharedStorage = sharedStorage;
-    }
-
-    public void setMessagesCount(int messagesCount) {
-        this.messagesCount = messagesCount;
-    }
-
-    public void setWorkDurationMin(int workDurationMin) {
-        this.workDurationMin = workDurationMin;
-    }
-
-    public void setWorkDurationMax(int workDurationMax) {
-        this.workDurationMax = workDurationMax;
-    }
-
-    public static class ProducerBuilder {
+    public static class Builder {
         private final Producer producer;
 
-        ProducerBuilder() {
+        Builder() {
             producer = new Producer();
         }
 
-        public ProducerBuilder id(int id) {
-            producer.setId(id);
+        public Builder id(int id) {
+            producer.id = id;
             return this;
         }
 
-        public ProducerBuilder sharedStorage(SharedStorage sharedStorage) {
-            producer.setSharedStorage(sharedStorage);
+        public Builder sharedStorage(SharedStorage sharedStorage) {
+            producer.sharedStorage = sharedStorage;
             return this;
         }
 
-        public ProducerBuilder messagesCountRange(int messagesCountMin, int messagesCountMax) {
-            producer.setMessagesCount(Producer.generateValueFromRange(messagesCountMin, messagesCountMax));
+        public Builder messagesCountRange(int messagesCountMin, int messagesCountMax) {
+            producer.messagesCount = Producer.generateValueFromRange(messagesCountMin, messagesCountMax);
             return this;
         }
 
-        public ProducerBuilder workDurationMin(int workDurationMin) {
-            producer.setWorkDurationMin(workDurationMin);
+        public Builder workDurationMin(int workDurationMin) {
+            producer.workDurationMin = workDurationMin;
             return this;
         }
 
-        public ProducerBuilder workDurationMax(int workDurationMax) {
-            producer.setWorkDurationMax(workDurationMax);
+        public Builder workDurationMax(int workDurationMax) {
+            producer.workDurationMax = workDurationMax;
             return this;
         }
 

@@ -32,7 +32,7 @@ public class Main {
         List<Thread> consumers = new ArrayList<>(consumersCount);
 
         for (int i = 0; i < producersCount; i++) {
-            var producer = new Producer.ProducerBuilder()
+            var producer = new Producer.Builder()
                     .id(i)
                     .sharedStorage(sharedStorage)
                     .messagesCountRange(producersMessagesCountMin, producersMessagesCountMax)
